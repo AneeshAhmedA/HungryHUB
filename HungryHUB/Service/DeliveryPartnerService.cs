@@ -1,4 +1,5 @@
-﻿using System;
+﻿// DeliveryPartnerService.cs
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using HungryHUB.Database;
@@ -20,7 +21,7 @@ namespace HungryHUB.Service
             return _context.DeliveryPartners.ToList();
         }
 
-        public DeliveryPartner GetDeliveryPartnerById(int deliveryPartnerId)
+        public DeliveryPartner GetDeliveryPartnerById(string deliveryPartnerId)
         {
             return _context.DeliveryPartners.Find(deliveryPartnerId);
         }
@@ -38,7 +39,7 @@ namespace HungryHUB.Service
             }
         }
 
-        public void UpdateDeliveryPartner(int deliveryPartnerId, DeliveryPartner updatedDeliveryPartner)
+        public void UpdateDeliveryPartner(string deliveryPartnerId, DeliveryPartner updatedDeliveryPartner)
         {
             var existingDeliveryPartner = _context.DeliveryPartners.Find(deliveryPartnerId);
 
@@ -57,7 +58,7 @@ namespace HungryHUB.Service
             }
         }
 
-        public void DeleteDeliveryPartner(int deliveryPartnerId)
+        public void DeleteDeliveryPartner(string deliveryPartnerId)
         {
             var deliveryPartner = _context.DeliveryPartners.Find(deliveryPartnerId);
 

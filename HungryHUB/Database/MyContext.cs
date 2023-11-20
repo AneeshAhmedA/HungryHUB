@@ -22,6 +22,10 @@ namespace HungryHUB.Database
 
         public DbSet<DeliveryPartner> DeliveryPartners { get; set; }
 
+        public DbSet<Order> Orders { get; set; }
+
+
+
         //configure connection string
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

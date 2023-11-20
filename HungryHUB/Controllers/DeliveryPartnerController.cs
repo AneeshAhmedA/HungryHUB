@@ -2,6 +2,9 @@
 using HungryHUB.DTO;
 using HungryHUB.Entity;
 using HungryHUB.Service;
+using HungryHUB.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -21,36 +24,15 @@ namespace HungryHUB.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public ActionResult<IEnumerable<DeliveryPartnerDTO>> GetAllDeliveryPartners()
-        {
-            var deliveryPartners = _deliveryPartnerService.GetAllDeliveryPartners();
-            var deliveryPartnerDTOs = _mapper.Map<List<DeliveryPartnerDTO>>(deliveryPartners);
-            return StatusCode(200, deliveryPartnerDTOs);
-        }
-
-        [HttpGet("{deliveryPartnerId}")]
-        public ActionResult<DeliveryPartnerDTO> GetDeliveryPartnerById(int deliveryPartnerId)
-        {
-            var deliveryPartner = _deliveryPartnerService.GetDeliveryPartnerById(deliveryPartnerId);
-
-            if (deliveryPartner == null)
-            {
-                return StatusCode(404); // Not Found
-            }
-
-            var deliveryPartnerDTO = _mapper.Map<DeliveryPartnerDTO>(deliveryPartner);
-            return StatusCode(200, deliveryPartnerDTO);
-        }
-
-        [HttpPost]
-        public ActionResult CreateDeliveryPartner([FromBody] DeliveryPartnerDTO deliveryPartnerDTO)
+        [HttpGet, Route("GetAllDeliveryPartners")]
+        [Authorize(Roles = "Admin")] // Adjust role based on your requirements
+        public IActionResult GetAllDeliveryPartners()
         {
             try
             {
-                var deliveryPartner = _mapper.Map<DeliveryPartner>(deliveryPartnerDTO);
-                _deliveryPartnerService.CreateDeliveryPartner(deliveryPartner);
-                return StatusCode(200); // 200 OK for success
+                List<DeliveryPartner> deliveryPartners = _deliveryPartnerService.GetAllDeliveryPartners();
+                List<DeliveryPartnerDTO> deliveryPartnersDto = _mapper.Map<List<DeliveryPartnerDTO>>(deliveryPartners);
+                return StatusCode(200, deliveryPartnersDto);
             }
             catch (Exception ex)
             {
@@ -58,8 +40,25 @@ namespace HungryHUB.Controllers
             }
         }
 
-        [HttpPut("{deliveryPartnerId}")]
-        public ActionResult UpdateDeliveryPartner(int deliveryPartnerId, [FromBody] DeliveryPartnerDTO deliveryPartnerDTO)
+        [HttpPost, Route("CreateDeliveryPartner")]
+        [AllowAnonymous] // Adjust authorization based on your requirements
+        public IActionResult CreateDeliveryPartner(DeliveryPartnerDTO deliveryPartnerDto)
+        {
+            try
+            {
+                DeliveryPartner deliveryPartner = _mapper.Map<DeliveryPartner>(deliveryPartnerDto);
+                _deliveryPartnerService.CreateDeliveryPartner(deliveryPartner);
+                return StatusCode(200, deliveryPartner);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPut, Route("UpdateDeliveryPartner/{deliveryPartnerId}")]
+        [Authorize(Roles = "Admin")] // Adjust role based on your requirements
+        public IActionResult UpdateDeliveryPartner(string deliveryPartnerId, DeliveryPartnerDTO deliveryPartnerDto)
         {
             try
             {
@@ -67,13 +66,13 @@ namespace HungryHUB.Controllers
 
                 if (existingDeliveryPartner == null)
                 {
-                    return StatusCode(404); // Not Found
+                    return NotFound(); // 404 Not Found
                 }
 
-                var updatedDeliveryPartner = _mapper.Map<DeliveryPartner>(deliveryPartnerDTO);
+                var updatedDeliveryPartner = _mapper.Map<DeliveryPartner>(deliveryPartnerDto);
                 _deliveryPartnerService.UpdateDeliveryPartner(deliveryPartnerId, updatedDeliveryPartner);
 
-                return StatusCode(200); // 200 OK for success
+                return StatusCode(200, updatedDeliveryPartner);
             }
             catch (Exception ex)
             {
@@ -81,14 +80,15 @@ namespace HungryHUB.Controllers
             }
         }
 
-        [HttpDelete("{deliveryPartnerId}")]
-        public ActionResult DeleteDeliveryPartner(int deliveryPartnerId)
+        [HttpDelete, Route("DeleteDeliveryPartner/{deliveryPartnerId}")]
+        [Authorize(Roles = "Admin")] // Adjust role based on your requirements
+        public IActionResult DeleteDeliveryPartner(string deliveryPartnerId)
         {
             var existingDeliveryPartner = _deliveryPartnerService.GetDeliveryPartnerById(deliveryPartnerId);
 
             if (existingDeliveryPartner == null)
             {
-                return StatusCode(404); // Not Found
+                return NotFound(); // 404 Not Found
             }
 
             _deliveryPartnerService.DeleteDeliveryPartner(deliveryPartnerId);

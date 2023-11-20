@@ -1,6 +1,9 @@
-﻿
+﻿// MenuItemService.cs
 using HungryHUB.Database;
 using HungryHUB.Entity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HungryHUB.Service
 {
@@ -25,6 +28,7 @@ namespace HungryHUB.Service
 
         public List<MenuItem> GetMenuItemsByRestaurant(int restaurantId)
         {
+            // Assuming RestaurantId is of type int in MenuItem entity
             return _context.MenuItem.Where(item => item.RestaurantId == restaurantId).ToList();
         }
 

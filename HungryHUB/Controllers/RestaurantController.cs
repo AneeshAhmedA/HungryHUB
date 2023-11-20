@@ -2,9 +2,7 @@
 using HungryHUB.DTO;
 using HungryHUB.Entity;
 using HungryHUB.Service;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 
@@ -16,63 +14,43 @@ namespace HungryHUB.Controllers
     {
         private readonly IRestaurantService _restaurantService;
         private readonly IMapper _mapper;
-        private readonly IConfiguration _configuration;
 
-        public RestaurantController(IRestaurantService restaurantService, IMapper mapper, IConfiguration configuration)
+        public RestaurantController(IRestaurantService restaurantService, IMapper mapper)
         {
             _restaurantService = restaurantService;
             _mapper = mapper;
-            _configuration = configuration;
         }
 
-        // GET: /api/Restaurant
         [HttpGet]
-        public IActionResult GetAllRestaurants()
+        public ActionResult<IEnumerable<RestaurantDTO>> GetAllRestaurants()
         {
-            try
-            {
-                List<Restaurant> restaurants = _restaurantService.GetAllRestaurants();
-                List<RestaurantDTO> restaurantDTOs = _mapper.Map<List<RestaurantDTO>>(restaurants);
-                return StatusCode(200, restaurantDTOs);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var restaurants = _restaurantService.GetAllRestaurants();
+            var restaurantDTOs = _mapper.Map<List<RestaurantDTO>>(restaurants);
+            return StatusCode(200, restaurantDTOs);
         }
 
-        // GET: /api/Restaurant/{id}
-        [HttpGet("{id}")]
-        public IActionResult GetRestaurantById(int id)
+        [HttpGet("{restaurantId}")]
+        public ActionResult<RestaurantDTO> GetRestaurantById(int restaurantId)
         {
-            try
-            {
-                Restaurant restaurant = _restaurantService.GetRestaurantById(id);
+            var restaurant = _restaurantService.GetRestaurantById(restaurantId);
 
-                if (restaurant == null)
-                {
-                    return NotFound();
-                }
-
-                RestaurantDTO restaurantDTO = _mapper.Map<RestaurantDTO>(restaurant);
-                return Ok(restaurantDTO);
-            }
-            catch (Exception ex)
+            if (restaurant == null)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(404); // Not Found
             }
+
+            var restaurantDTO = _mapper.Map<RestaurantDTO>(restaurant);
+            return StatusCode(200, restaurantDTO);
         }
 
-        // POST: /api/Restaurant
         [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public IActionResult CreateRestaurant([FromBody] RestaurantDTO restaurantDTO)
+        public ActionResult CreateRestaurant([FromBody] RestaurantDTO restaurantDTO)
         {
             try
             {
-                Restaurant restaurant = _mapper.Map<Restaurant>(restaurantDTO);
+                var restaurant = _mapper.Map<Restaurant>(restaurantDTO);
                 _restaurantService.CreateRestaurant(restaurant);
-                return Ok(); // Return 200 OK for success
+                return StatusCode(200); // 200 OK for success
             }
             catch (Exception ex)
             {
@@ -80,24 +58,22 @@ namespace HungryHUB.Controllers
             }
         }
 
-        // PUT: /api/Restaurant/{id}
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")] // Example authorization, adjust as needed
-        public IActionResult UpdateRestaurant(int id, [FromBody] RestaurantDTO restaurantDTO)
+        [HttpPut("{restaurantId}")]
+        public ActionResult UpdateRestaurant(int restaurantId, [FromBody] RestaurantDTO restaurantDTO)
         {
             try
             {
-                Restaurant existingRestaurant = _restaurantService.GetRestaurantById(id);
+                var existingRestaurant = _restaurantService.GetRestaurantById(restaurantId);
 
                 if (existingRestaurant == null)
                 {
-                    return NotFound();
+                    return StatusCode(404); // Not Found
                 }
 
-                _mapper.Map(restaurantDTO, existingRestaurant);
-                _restaurantService.UpdateRestaurant(id, existingRestaurant);
+                var updatedRestaurant = _mapper.Map<Restaurant>(restaurantDTO);
+                _restaurantService.UpdateRestaurant(restaurantId, updatedRestaurant);
 
-                return NoContent();
+                return StatusCode(200); // 200 OK for success
             }
             catch (Exception ex)
             {
@@ -105,28 +81,19 @@ namespace HungryHUB.Controllers
             }
         }
 
-        // DELETE: /api/Restaurant/{id}
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")] // Example authorization, adjust as needed
-        public IActionResult DeleteRestaurant(int id)
+        [HttpDelete("{restaurantId}")]
+        public ActionResult DeleteRestaurant(int restaurantId)
         {
-            try
+            var existingRestaurant = _restaurantService.GetRestaurantById(restaurantId);
+
+            if (existingRestaurant == null)
             {
-                Restaurant existingRestaurant = _restaurantService.GetRestaurantById(id);
-
-                if (existingRestaurant == null)
-                {
-                    return NotFound();
-                }
-
-                _restaurantService.DeleteRestaurant(id);
-
-                return NoContent();
+                return StatusCode(404); // Not Found
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+
+            _restaurantService.DeleteRestaurant(restaurantId);
+
+            return StatusCode(200); // 200 OK for success
         }
     }
 }

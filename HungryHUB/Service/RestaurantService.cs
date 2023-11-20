@@ -1,7 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// RestaurantService.cs
 using HungryHUB.Database;
 using HungryHUB.Entity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HungryHUB.Service
 {
@@ -14,7 +16,6 @@ namespace HungryHUB.Service
             _context = context;
         }
 
-     
         public List<Restaurant> GetAllRestaurants()
         {
             return _context.Restaurants.ToList();
@@ -25,6 +26,18 @@ namespace HungryHUB.Service
             return _context.Restaurants.Find(restaurantId);
         }
 
+        public void CreateRestaurant(Restaurant restaurant)
+        {
+            try
+            {
+                _context.Restaurants.Add(restaurant);
+                _context.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
         public void UpdateRestaurant(int restaurantId, Restaurant updatedRestaurant)
         {
@@ -33,8 +46,8 @@ namespace HungryHUB.Service
             if (existingRestaurant != null)
             {
                 existingRestaurant.Name = updatedRestaurant.Name;
-                existingRestaurant.City = updatedRestaurant.City;
-                // Update other properties as needed
+                existingRestaurant.CityID = updatedRestaurant.CityID;
+
                 _context.Restaurants.Update(existingRestaurant);
                 _context.SaveChanges();
             }
@@ -46,20 +59,12 @@ namespace HungryHUB.Service
 
         public void DeleteRestaurant(int restaurantId)
         {
-            throw new NotImplementedException();
-        }
+            var restaurant = _context.Restaurants.Find(restaurantId);
 
-        void IRestaurantService.CreateRestaurant(Restaurant restaurant)
-        {
-            try
+            if (restaurant != null)
             {
-                _context.Restaurants.Add(restaurant);
+                _context.Restaurants.Remove(restaurant);
                 _context.SaveChanges();
-
-            }
-            catch (Exception)
-            {
-                throw;
             }
         }
     }

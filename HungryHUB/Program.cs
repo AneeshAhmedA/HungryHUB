@@ -15,6 +15,7 @@ builder.Services.AddTransient<ICityService, CityService>();
 builder.Services.AddTransient<IRestaurantService, RestaurantService>();
 builder.Services.AddTransient<IMenuItemService, MenuItemService>();
 builder.Services.AddTransient<IDeliveryPartnerService, DeliveryPartnerService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddDbContext<MyContext>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();
