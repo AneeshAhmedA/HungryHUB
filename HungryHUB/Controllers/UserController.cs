@@ -35,7 +35,7 @@ namespace HungryHUB.Controllers
             {
                 List<User> users = userService.GetAllUsers();
                 List<UserDTO> usersDto = _mapper.Map<List<UserDTO>>(users);
-                return StatusCode(200, users);
+                return StatusCode(200, User);
 
             }
             catch (Exception ex)
@@ -52,7 +52,7 @@ namespace HungryHUB.Controllers
             {
                 User user = _mapper.Map<User>(userDto);
                 userService.CreateUser(user);
-                return StatusCode(200, user);
+                return StatusCode(200);
 
             }
             catch (Exception ex)

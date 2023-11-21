@@ -23,7 +23,7 @@ namespace HungryHUB.Controllers
         }
 
         [HttpGet, Route("GetAllDeliveryPartners")]
-        [Authorize(Roles = "Admin")] // Adjust role based on your requirements
+        [Authorize(Roles = "Admin")] 
         public IActionResult GetAllDeliveryPartners()
         {
             try
@@ -39,7 +39,7 @@ namespace HungryHUB.Controllers
         }
 
         [HttpPost, Route("CreateDeliveryPartner")]
-        [AllowAnonymous] // Adjust authorization based on your requirements
+        [Authorize(Roles = "DeliveryPartner")] 
         public IActionResult CreateDeliveryPartner(DeliveryPartnerDTO deliveryPartnerDto)
         {
             try
@@ -55,7 +55,7 @@ namespace HungryHUB.Controllers
         }
 
         [HttpPut, Route("UpdateDeliveryPartner/{deliveryPartnerId}")]
-        [Authorize(Roles = "Admin")] // Adjust role based on your requirements
+        [Authorize(Roles = "Admin")] 
         public IActionResult UpdateDeliveryPartner(string deliveryPartnerId, DeliveryPartnerDTO deliveryPartnerDto)
         {
             try
@@ -64,7 +64,7 @@ namespace HungryHUB.Controllers
 
                 if (existingDeliveryPartner == null)
                 {
-                    return NotFound(); // 404 Not Found
+                    return NotFound(); 
                 }
 
                 var updatedDeliveryPartner = _mapper.Map<DeliveryPartner>(deliveryPartnerDto);
