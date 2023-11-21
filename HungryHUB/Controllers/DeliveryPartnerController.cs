@@ -79,19 +79,19 @@ namespace HungryHUB.Controllers
         }
 
         [HttpDelete, Route("DeleteDeliveryPartner/{deliveryPartnerId}")]
-        [Authorize(Roles = "Admin")] // Adjust role based on your requirements
+        [Authorize(Roles = "Admin")] 
         public IActionResult DeleteDeliveryPartner(string deliveryPartnerId)
         {
             var existingDeliveryPartner = _deliveryPartnerService.GetDeliveryPartnerById(deliveryPartnerId);
 
             if (existingDeliveryPartner == null)
             {
-                return NotFound(); // 404 Not Found
+                return NotFound(); 
             }
 
             _deliveryPartnerService.DeleteDeliveryPartner(deliveryPartnerId);
 
-            return StatusCode(200); // 200 OK for success
+            return StatusCode(200); 
         }
     }
 }

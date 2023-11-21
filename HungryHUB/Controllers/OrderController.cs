@@ -3,8 +3,6 @@ using HungryHUB.DTO;
 using HungryHUB.Entity;
 using HungryHUB.Service;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 
 namespace HungryHUB.Controllers
 {

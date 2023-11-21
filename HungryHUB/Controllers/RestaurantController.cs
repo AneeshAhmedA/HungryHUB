@@ -2,6 +2,7 @@
 using HungryHUB.DTO;
 using HungryHUB.Entity;
 using HungryHUB.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HungryHUB.Controllers
@@ -34,7 +35,7 @@ namespace HungryHUB.Controllers
 
             if (restaurant == null)
             {
-                return StatusCode(404); // Not Found
+                return StatusCode(404);
             }
 
             var restaurantDTO = _mapper.Map<RestaurantDTO>(restaurant);
@@ -42,13 +43,14 @@ namespace HungryHUB.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Restaurant")]
         public ActionResult CreateRestaurant([FromBody] RestaurantDTO restaurantDTO)
         {
             try
             {
                 var restaurant = _mapper.Map<Restaurant>(restaurantDTO);
                 _restaurantService.CreateRestaurant(restaurant);
-                return StatusCode(200); // 200 OK for success
+                return StatusCode(200); 
             }
             catch (Exception ex)
             {
@@ -56,7 +58,9 @@ namespace HungryHUB.Controllers
             }
         }
 
-        [HttpPut("{restaurantId}")]
+        [HttpPut,Route("{restaurantId}")]
+        [Authorize(Roles = "Restaurant")]
+
         public ActionResult UpdateRestaurant(int restaurantId, [FromBody] RestaurantDTO restaurantDTO)
         {
             try
@@ -65,13 +69,13 @@ namespace HungryHUB.Controllers
 
                 if (existingRestaurant == null)
                 {
-                    return StatusCode(404); // Not Found
+                    return StatusCode(404);
                 }
 
                 var updatedRestaurant = _mapper.Map<Restaurant>(restaurantDTO);
                 _restaurantService.UpdateRestaurant(restaurantId, updatedRestaurant);
 
-                return StatusCode(200); // 200 OK for success
+                return StatusCode(200); 
             }
             catch (Exception ex)
             {
@@ -80,18 +84,19 @@ namespace HungryHUB.Controllers
         }
 
         [HttpDelete("{restaurantId}")]
+        [Authorize(Roles = "Restaurant")]
         public ActionResult DeleteRestaurant(int restaurantId)
         {
             var existingRestaurant = _restaurantService.GetRestaurantById(restaurantId);
 
             if (existingRestaurant == null)
             {
-                return StatusCode(404); // Not Found
+                return StatusCode(404); 
             }
 
             _restaurantService.DeleteRestaurant(restaurantId);
 
-            return StatusCode(200); // 200 OK for success
+            return StatusCode(200); 
         }
     }
 }
