@@ -5,9 +5,8 @@ namespace HungryHUB.Entity
 {
     public class User
     {
-        //Scalar Properties
-        [Key] //Primary key
-        [StringLength(5)] //set size as 5
+        [Key] 
+        [StringLength(5)] 
         [Column(TypeName = "char")]
         public string? UserID { get; set; }
         [Required]
@@ -30,7 +29,6 @@ namespace HungryHUB.Entity
         [StringLength(10)]
         [Column("Role", TypeName = "varchar")]
         public string? Role { get; set; }
-        //Navigation Properties
     }
 
 

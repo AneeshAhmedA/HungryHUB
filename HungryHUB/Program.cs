@@ -9,13 +9,15 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ICityService, CityService>();
 builder.Services.AddTransient<IRestaurantService, RestaurantService>();
 builder.Services.AddTransient<IMenuItemService, MenuItemService>();
 builder.Services.AddTransient<IDeliveryPartnerService, DeliveryPartnerService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<ICouponService, CouponService>();
+builder.Services.AddTransient<IWalletService, WalletService>();
+
 builder.Services.AddDbContext<MyContext>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();

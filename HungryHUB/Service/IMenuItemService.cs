@@ -1,7 +1,5 @@
-﻿// IMenuItemService.cs
+﻿
 using HungryHUB.Entity;
-using System.Collections.Generic;
-
 namespace HungryHUB.Service
 {
     public interface IMenuItemService

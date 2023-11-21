@@ -1,10 +1,6 @@
-﻿// RestaurantService.cs
+﻿
 using HungryHUB.Database;
 using HungryHUB.Entity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace HungryHUB.Service
 {
     public class RestaurantService : IRestaurantService

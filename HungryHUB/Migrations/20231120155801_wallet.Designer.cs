@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HungryHUB.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20231120071108_hub")]
-    partial class hub
+    [Migration("20231120155801_wallet")]
+    partial class wallet
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,6 +37,32 @@ namespace HungryHUB.Migrations
                     b.HasKey("CityID");
 
                     b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("HungryHUB.Entity.Coupon", b =>
+                {
+                    b.Property<int>("CouponId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CouponId"), 1L, 1);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("DiscountAmount")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.HasKey("CouponId");
+
+                    b.ToTable("Coupons");
                 });
 
             modelBuilder.Entity("HungryHUB.Entity.DeliveryPartner", b =>
@@ -97,6 +123,10 @@ namespace HungryHUB.Migrations
                     b.Property<string>("OrderId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("DeliveryPartnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
@@ -108,6 +138,8 @@ namespace HungryHUB.Migrations
                         .HasColumnType("char(5)");
 
                     b.HasKey("OrderId");
+
+                    b.HasIndex("DeliveryPartnerId");
 
                     b.HasIndex("RestaurantId");
 
@@ -180,6 +212,28 @@ namespace HungryHUB.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("HungryHUB.Entity.Wallet", b =>
+                {
+                    b.Property<string>("WalletId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("Balance")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("char(5)");
+
+                    b.HasKey("WalletId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Wallets");
+                });
+
             modelBuilder.Entity("HungryHUB.Entity.DeliveryPartner", b =>
                 {
                     b.HasOne("HungryHUB.Entity.City", "City")
@@ -204,6 +258,12 @@ namespace HungryHUB.Migrations
 
             modelBuilder.Entity("HungryHUB.Entity.Order", b =>
                 {
+                    b.HasOne("HungryHUB.Entity.DeliveryPartner", "DeliveryPartner")
+                        .WithMany()
+                        .HasForeignKey("DeliveryPartnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("HungryHUB.Entity.Restaurant", "Restaurant")
                         .WithMany()
                         .HasForeignKey("RestaurantId")
@@ -215,6 +275,8 @@ namespace HungryHUB.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("DeliveryPartner");
 
                     b.Navigation("Restaurant");
 
@@ -230,6 +292,17 @@ namespace HungryHUB.Migrations
                         .IsRequired();
 
                     b.Navigation("City");
+                });
+
+            modelBuilder.Entity("HungryHUB.Entity.Wallet", b =>
+                {
+                    b.HasOne("HungryHUB.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

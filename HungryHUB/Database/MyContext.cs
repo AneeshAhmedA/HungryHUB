@@ -5,7 +5,6 @@ namespace HungryHUB.Database
 {
     public class MyContext : DbContext
     {
-        //define entity set
         private readonly IConfiguration configuration;
 
         public MyContext(IConfiguration configuration)
@@ -24,9 +23,11 @@ namespace HungryHUB.Database
 
         public DbSet<Order> Orders { get; set; }
 
+        public DbSet<Coupon> Coupons { get; set; }
+
+        public DbSet<Wallet> Wallets { get; set; }
 
 
-        //configure connection string
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 

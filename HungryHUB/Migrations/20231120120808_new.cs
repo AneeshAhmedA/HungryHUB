@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HungryHUB.Migrations
 {
-    public partial class hub : Migration
+    public partial class @new : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -106,23 +106,30 @@ namespace HungryHUB.Migrations
                     OrderId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<string>(type: "char(5)", nullable: false),
                     RestaurantId = table.Column<int>(type: "int", nullable: false),
+                    DeliveryPartnerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.OrderId);
                     table.ForeignKey(
+                        name: "FK_Orders_DeliveryPartners_DeliveryPartnerId",
+                        column: x => x.DeliveryPartnerId,
+                        principalTable: "DeliveryPartners",
+                        principalColumn: "DeliveryPartnerId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Orders_Restaurants_RestaurantId",
                         column: x => x.RestaurantId,
                         principalTable: "Restaurants",
                         principalColumn: "RestaurantId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Orders_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -134,6 +141,11 @@ namespace HungryHUB.Migrations
                 name: "IX_MenuItem_RestaurantId",
                 table: "MenuItem",
                 column: "RestaurantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_DeliveryPartnerId",
+                table: "Orders",
+                column: "DeliveryPartnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_RestaurantId",
@@ -154,13 +166,13 @@ namespace HungryHUB.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DeliveryPartners");
-
-            migrationBuilder.DropTable(
                 name: "MenuItem");
 
             migrationBuilder.DropTable(
                 name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "DeliveryPartners");
 
             migrationBuilder.DropTable(
                 name: "Restaurants");

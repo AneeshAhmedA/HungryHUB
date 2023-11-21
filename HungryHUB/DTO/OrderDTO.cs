@@ -6,6 +6,7 @@
         public string OrderId { get; set; }
         public string UserId { get; set; }
         public int RestaurantId { get; set; }
+        public string? DeliveryPartnerId { get; set; }
         public DateTime OrderDate { get; set; }
     }
 }

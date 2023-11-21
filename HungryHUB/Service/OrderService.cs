@@ -1,9 +1,5 @@
 ﻿using HungryHUB.Database;
 using HungryHUB.Entity;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace HungryHUB.Service
 {
@@ -28,12 +24,10 @@ namespace HungryHUB.Service
 
             if (existingOrder != null)
             {
-                // Update properties based on your requirements
                 existingOrder.OrderDate = updatedOrder.OrderDate;
 
                 _context.SaveChanges();
             }
-            // Handle case where order is not found
         }
 
         public void DeleteOrder(string orderId)
@@ -45,7 +39,6 @@ namespace HungryHUB.Service
                 _context.Orders.Remove(order);
                 _context.SaveChanges();
             }
-            // Handle case where order is not found
         }
 
         public Order GetOrderById(string orderId)

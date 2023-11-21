@@ -3,8 +3,6 @@ using HungryHUB.DTO;
 using HungryHUB.Entity;
 using HungryHUB.Service;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 
 namespace HungryHUB.Controllers
 {
@@ -36,7 +34,7 @@ namespace HungryHUB.Controllers
 
             if (menuItem == null)
             {
-                return StatusCode(404); // Not Found
+                return StatusCode(404);
             }
 
             var menuItemDTO = _mapper.Map<MenuItemDTO>(menuItem);
@@ -58,7 +56,7 @@ namespace HungryHUB.Controllers
             {
                 var menuItem = _mapper.Map<MenuItem>(menuItemDTO);
                 _menuItemService.CreateMenuItem(menuItem);
-                return StatusCode(200); // Return 200 OK for success
+                return StatusCode(200); 
             }
             catch (Exception ex)
             {
@@ -75,13 +73,13 @@ namespace HungryHUB.Controllers
 
                 if (existingMenuItem == null)
                 {
-                    return StatusCode(404); // Not Found
+                    return StatusCode(404); 
                 }
 
                 var updatedMenuItem = _mapper.Map<MenuItem>(menuItemDTO);
                 _menuItemService.UpdateMenuItem(menuItemId, updatedMenuItem);
 
-                return StatusCode(204); // No Content
+                return StatusCode(204);
             }
             catch (Exception ex)
             {
@@ -96,12 +94,12 @@ namespace HungryHUB.Controllers
 
             if (existingMenuItem == null)
             {
-                return StatusCode(404); // Not Found
+                return StatusCode(404); 
             }
 
             _menuItemService.DeleteMenuItem(menuItemId);
 
-            return StatusCode(204); // No Content
+            return StatusCode(204);
         }
     }
 }

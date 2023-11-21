@@ -4,7 +4,6 @@ using HungryHUB.Entity;
 using HungryHUB.Models;
 using HungryHUB.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -28,7 +27,6 @@ namespace HungryHUB.Controllers
             this.configuration = configuration;
         }
 
-        //Get: /GetAllUsers
         [HttpGet, Route("GetAllUsers")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetAllUsers()
@@ -59,16 +57,10 @@ namespace HungryHUB.Controllers
             }
             catch (Exception ex)
             {
-                while (ex.InnerException != null)
-                {
-                    ex = ex.InnerException;
-                }
 
                 return StatusCode(500, ex.Message);
-
             }
         }
-        //PUT /EditUser
         [HttpPut, Route("EditUser")]
         [Authorize(Roles = "Customer")]
         public IActionResult EditUser(UserDTO userDto)
@@ -114,12 +106,12 @@ namespace HungryHUB.Controllers
             var issuer = configuration["Jwt:Issuer"];
             var audience = configuration["Jwt:Audience"];
             var key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"]);
-            //header part
+  
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha512Signature
             );
-            //payload part
+    
             var subject = new ClaimsIdentity(new[]
             {
                         new Claim(ClaimTypes.Name,user.Name),
@@ -128,7 +120,7 @@ namespace HungryHUB.Controllers
                     });
 
             var expires = DateTime.UtcNow.AddMinutes(10);
-            //signature part
+    
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = subject,

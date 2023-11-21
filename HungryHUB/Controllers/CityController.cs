@@ -3,7 +3,6 @@ using HungryHUB.DTO;
 using HungryHUB.Entity;
 using HungryHUB.Service;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HungryHUB.Controllers
@@ -22,8 +21,6 @@ namespace HungryHUB.Controllers
             _mapper = mapper;
             this.configuration = configuration;
         }
-        //end points
-        //GET /GetAllCities
         [HttpGet, Route("GetAllCities")]
         [Authorize(Roles = "Admin")]
         public IActionResult GetAll()
@@ -40,7 +37,6 @@ namespace HungryHUB.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        //POST /AddCity
         [Authorize(Roles = "Admin")]
         [HttpPost, Route("AddCity")]
         public IActionResult Add([FromBody] CityDTO cityDto)
@@ -58,7 +54,7 @@ namespace HungryHUB.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        //PUT /EditCity
+ 
         [HttpPut, Route("EditCity")]
         [Authorize(Roles = "Admin")]
         public IActionResult EditCity(CityDTO cityDto)
@@ -75,7 +71,7 @@ namespace HungryHUB.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        //Delete /DeleteCity
+     
         [HttpDelete, Route("DeleteCity/{cityID}")]
         [Authorize(Roles = "Admin")]
         public IActionResult DeleteCity(long cityID)

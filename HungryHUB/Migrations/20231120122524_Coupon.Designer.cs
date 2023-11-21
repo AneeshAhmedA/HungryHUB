@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HungryHUB.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20231120081116_resta")]
-    partial class resta
+    [Migration("20231120122524_Coupon")]
+    partial class Coupon
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,6 +37,32 @@ namespace HungryHUB.Migrations
                     b.HasKey("CityID");
 
                     b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("HungryHUB.Entity.Coupon", b =>
+                {
+                    b.Property<int>("CouponId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CouponId"), 1L, 1);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("DiscountAmount")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.HasKey("CouponId");
+
+                    b.ToTable("Coupons");
                 });
 
             modelBuilder.Entity("HungryHUB.Entity.DeliveryPartner", b =>
@@ -82,9 +108,8 @@ namespace HungryHUB.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<string>("RestaurantId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RestaurantId")
+                        .HasColumnType("int");
 
                     b.HasKey("MenuItemId");
 
@@ -105,9 +130,8 @@ namespace HungryHUB.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("RestaurantId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RestaurantId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -126,8 +150,11 @@ namespace HungryHUB.Migrations
 
             modelBuilder.Entity("HungryHUB.Entity.Restaurant", b =>
                 {
-                    b.Property<string>("RestaurantId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RestaurantId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RestaurantId"), 1L, 1);
 
                     b.Property<string>("CityID")
                         .IsRequired()

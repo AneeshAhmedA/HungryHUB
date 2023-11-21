@@ -28,7 +28,7 @@ namespace HungryHUB.Controllers
             {
                 var order = _mapper.Map<Order>(orderDTO);
                 _orderService.CreateOrder(order);
-                return StatusCode(200, order.OrderId); // Return the created orderId
+                return StatusCode(200, order.OrderId); 
             }
             catch (Exception ex)
             {
@@ -72,7 +72,7 @@ namespace HungryHUB.Controllers
             {
                 var updatedOrder = _mapper.Map<Order>(updatedOrderDTO);
                 _orderService.UpdateOrder(orderId, updatedOrder);
-                return NoContent(); // 204 No Content
+                return NoContent(); 
             }
             catch (Exception ex)
             {
@@ -84,7 +84,7 @@ namespace HungryHUB.Controllers
         public IActionResult DeleteOrder(string orderId)
         {
             _orderService.DeleteOrder(orderId);
-            return NoContent(); // 204 No Content
+            return NoContent();
         }
     }
 }
